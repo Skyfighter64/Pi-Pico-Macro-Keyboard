@@ -1,7 +1,7 @@
-
-![Keyboard](media/jay-zhang-ZByWaPXD2fU-unsplash.png)
 # Pi Pico Macro Keyboard
-This repository contains CircuitPython-based code for DIY Macro Keyboards using the Raspberry Pi Pico
+![Keyboard](media/jay-zhang-ZByWaPXD2fU-unsplash.png)
+
+This repository contains code for DIY Macro Keyboards using the Raspberry Pi Pico and CircuitPython.
 ## Install:
 1. Install CircuitPython on the pi pico (guide: https://learn.adafruit.com/getting-started-with-raspberry-pi-pico-circuitpython/circuitpython).
 The Pi Pico will now show up as a "CircuitPython" USB drive
