@@ -2,6 +2,9 @@
 ![Keyboard](media/jay-zhang-ZByWaPXD2fU-unsplash.png)
 
 This repository contains code for DIY Macro Keyboards using the Raspberry Pi Pico and CircuitPython.
+
+Note: This code does not include row-scanning. All buttons have to be connected to an individual GPIO Pin.
+
 ## Install:
 1. Install CircuitPython on the pi pico (guide: https://learn.adafruit.com/getting-started-with-raspberry-pi-pico-circuitpython/circuitpython).
 The Pi Pico will now show up as a "CircuitPython" USB drive
@@ -22,6 +25,7 @@ Note that the first entry of the "pins" list corresponds to the first entry of t
 This project is inspired by the adafruit custom keyboard guide.
 Check it out if you need a more detailed guide:
 https://learn.adafruit.com/diy-pico-mechanical-keyboard-with-fritzing-circuitpython/overview
+
 The code of the guide should be interchangeable with the code from this repo (although not tested)
 
 Title Image:
