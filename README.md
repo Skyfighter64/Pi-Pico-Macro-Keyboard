@@ -21,7 +21,7 @@ Edit the "code.py" file on the Pi Pico by opening it in a text editor.
 To add/change Keys and the pins of the keys, edit the "keymap" and "pins" list.
 Note that the first entry of the "pins" list corresponds to the first entry of the "keymap" list, and so on.
 
-# Credits
+## Credits
 This project is inspired by the adafruit custom keyboard guide.
 Check it out if you need a more detailed guide:
 https://learn.adafruit.com/diy-pico-mechanical-keyboard-with-fritzing-circuitpython/overview
