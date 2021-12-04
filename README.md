@@ -34,7 +34,7 @@ Supported Keys:
 - All media keys listed here: https://circuitpython.readthedocs.io/projects/hid/en/latest/api.html#adafruit-hid-consumer-control-code-consumercontrolcode
 - Keys for peeking/switching macro layers
 
-# Credits
+## Credits
 This project is inspired by the adafruit custom keyboard guide.
 Check it out if you need a more detailed guide:
 https://learn.adafruit.com/diy-pico-mechanical-keyboard-with-fritzing-circuitpython/overview
