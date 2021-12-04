@@ -3,7 +3,13 @@
 
 This repository contains code for DIY Macro Keyboards using the Raspberry Pi Pico and CircuitPython.
 
-Note: This code does not include row-scanning. All buttons have to be connected to an individual GPIO Pin.
+### Features:
+- Support for multiple macro layers
+- Supports all standard keyboard keys and media keys
+- Customizable
+
+### Limits:
+- Does not include row-scanning (yet?). All buttons have to be connected to an individual GPIO Pin.
 
 ## Install:
 1. Install CircuitPython on the pi pico (guide: https://learn.adafruit.com/getting-started-with-raspberry-pi-pico-circuitpython/circuitpython).
@@ -19,7 +25,14 @@ The Pi Pico will now show up as a "CircuitPython" USB drive
 Edit the "code.py" file on the Pi Pico by opening it in a text editor.
 
 To add/change Keys and the pins of the keys, edit the "keymap" and "pins" list.
-Note that the first entry of the "pins" list corresponds to the first entry of the "keymap" list, and so on.
+Note that the first entry of the "pins" list corresponds to the first entry of every layer in the "keymap" list, and so on.
+
+More details found inside the python file.
+
+Supported Keys:
+- All standard keys and combinations of them listed here: https://circuitpython.readthedocs.io/projects/hid/en/latest/api.html#adafruit-hid-keycode-keycode
+- All media keys listed here: https://circuitpython.readthedocs.io/projects/hid/en/latest/api.html#adafruit-hid-consumer-control-code-consumercontrolcode
+- Keys for peeking/switching macro layers
 
 # Credits
 This project is inspired by the adafruit custom keyboard guide.
