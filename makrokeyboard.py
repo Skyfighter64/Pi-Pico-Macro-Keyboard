@@ -34,6 +34,9 @@ import time
 # and
 # https://circuitpython.readthedocs.io/projects/hid/en/latest/api.html#adafruit-hid-consumer-control-code-consumercontrolcode
 #
+
+# keymap containing all key layers with all key presses
+# every i'th entry corresponds to the i'th button in the "pins" list
 keymap = [
 (KeyType.MEDIA, ConsumerControlCode.VOLUME_INCREMENT), #Volume UP
 (KeyType.MEDIA, ConsumerControlCode.VOLUME_DECREMENT), # Volume Down
@@ -99,6 +102,10 @@ def ReleaseKey(key):
 def CheckKeys():
     # check and execute all keypresses
     for i in range(len(buttons)):
+        # check if the index exceeds the keymap layer's size
+        if (i >= len(keymap)):
+            # layer size exceeded, stop checking
+            break
         # check if a button was pressed
         if (not buttons[i].value and last_states[i]) :
             PressKey(keymap[i])
