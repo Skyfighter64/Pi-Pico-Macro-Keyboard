@@ -25,6 +25,8 @@ class KeyType():
 # define available layer switch modes
 class Layer():
     # switch to the layer while the key is pressed
+    # Note: Peek currently only works, if the action for the peek button is the same on both layers
+    #   (There would be no reason to assign them to sth else anyways)
     PEEK = 0
     # switch layers when key was pressed
     SWITCH = 1
@@ -181,7 +183,7 @@ def CheckKeys():
 
 # endless main loop
 while True:
-    # set the internal led on when default layer is active 
+    # set the internal led on when default layer is active
     led.value = (activeLayer == 0)
     # check for key presses
     CheckKeys()
