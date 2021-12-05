@@ -14,6 +14,8 @@ from adafruit_hid.consumer_control_code import ConsumerControlCode
 
 # define the available key types
 class KeyType():
+    # no action for this key
+    NONE = 0
     # standard letters, numbers, and keyboard keys
     KEY = 1
     # media keys like volume or play/pause
@@ -30,6 +32,8 @@ class Layer():
 import time
 
 # keymap formats:
+# (KeyType.NONE,)
+# or
 # (KeyType.KEY, (Keycode.A, Keycode.B, ...))
 # or
 # (KeyType.MEDIA, ConsumerControlCode.VOLUME_DECREMENT)
@@ -95,8 +99,10 @@ consumer_control = ConsumerControl(usb_hid.devices)
 pins = [board.GP2, board.GP3, board.GP4, board.GP5, board.GP6, board.GP7, board.GP8, board.GP9, board.GP10, board.GP11, board.GP12, board.GP13]
 buttons = []
 
+# variable for the currently active layer
 activeLayer = 0
 previousLayer = 0
+# variable containing the previous layer if peeking or 'None' if not peeking
 
 # initialize buttons as input with an internal Pull UP resistor
 for pin in pins:
@@ -112,6 +118,7 @@ last_states = [False] * len(buttons)
 # @param key: a touple of the structure (KeyType.KEY, (Keycode[, Keycode, ...]))
 #                       or       (KeyType.MEDIA, ConsumerControlCode)
 #                       or       (KeyType.LAYER, (Layer.SWITCH | Layer.PEEK, layer index : int))
+#                       or       (KeyType.NONE, [...])
 def PressKey(key):
     # reference global variables
     global activeLayer
