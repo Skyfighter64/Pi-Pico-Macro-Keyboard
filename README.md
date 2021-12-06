@@ -6,6 +6,7 @@ This repository contains code for DIY Macro Keyboards using the Raspberry Pi Pic
 ### Features:
 - Support for multiple macro layers
 - Supports all standard keyboard keys and media keys
+- Supports lighting using neopixels
 - Customizable
 
 ### Limits:
@@ -17,9 +18,11 @@ The Pi Pico will now show up as a "CircuitPython" USB drive
 
 
 2. Install the adafruit_hid library by downloading the library bundle as stated here (https://circuitpython.org/libraries). Unzip and copy the "lib/adafruit_hid" folder into the "lib" folder on your Pi Pico
+  - If you want to use Neopixel lighting, also copy "lib/neopixel.mpy" into the "lib" folder of your pi pico
 
 
 3. Copy the contents of "makrokeyboard.py" from the Repository into the existing "code.py" file on your Pi Pico
+  - If you don't use Neopixels, comment everything neopixel-related in  "code.py"
 
 ## Customization:
 Edit the "code.py" file on the Pi Pico by opening it in a text editor.

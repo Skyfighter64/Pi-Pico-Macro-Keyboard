@@ -7,10 +7,15 @@
 import board
 import digitalio
 import usb_hid
+
+import time
 from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keycode import Keycode
 from adafruit_hid.consumer_control import ConsumerControl
 from adafruit_hid.consumer_control_code import ConsumerControlCode
+
+import neopixel
+
 
 # define the available key types
 class KeyType():
@@ -22,16 +27,24 @@ class KeyType():
     MEDIA = 2
     # switch makro layers
     LAYER = 3
-# define available layer switch modes
+    # change lighting
+    LIGHTING = 4
+# define available layer switch actions
 class Layer():
     # switch to the layer while the key is pressed
-    # Note: Peek currently only works, if the action for the peek button is the same on both layers
-    #   (There would be no reason to assign them to sth else anyways)
     PEEK = 0
     # switch layers when key was pressed
     SWITCH = 1
 
-import time
+# define available lighting modification actions
+class Lighting():
+    # turn the LEDs on/off by setting their brightness to  0.5 / 0
+    TOGGLE = 0
+    # increase the brightness of all leds in small steps
+    INCREASE_BRIGHTNESS = 1
+    # decrease the brightness of all leds
+    DECREASE_BRIGHTNESS = 2
+
 
 # keymap formats:
 # (KeyType.NONE,)
@@ -41,6 +54,9 @@ import time
 # (KeyType.MEDIA, ConsumerControlCode.VOLUME_DECREMENT)
 # or
 # (KeyType.LAYER, (Layer.SWITCH, 1))
+# or
+# (KeyType.LIGHTING, Lighting.INCREASE_BRIGHTNESS))
+
 
 
 # note: for one-element Keycodes, an extra comma is needed
@@ -74,10 +90,10 @@ keymap = [
 
     # layer 1:
     [
-        (KeyType.KEY, (Keycode.F13,)), # more extra F keys for custom program hotkeys
-        (KeyType.KEY, (Keycode.F14,)),
-        (KeyType.KEY, (Keycode.F15,)),
-        (KeyType.KEY, (Keycode.F16,)),
+        (KeyType.LIGHTING, Lighting.INCREASE_BRIGHTNESS), # adjust lighting brightness
+        (KeyType.LIGHTING, Lighting.DECREASE_BRIGHTNESS),
+        (KeyType.LIGHTING, Lighting.OFF),
+        (KeyType.KEY, (Keycode.F16,)),  # more extra F keys for custom program hotkeys
         (KeyType.KEY, (Keycode.F17,)),
         (KeyType.KEY, (Keycode.F18,)),
         (KeyType.KEY, (Keycode.F19,)),
@@ -101,6 +117,9 @@ consumer_control = ConsumerControl(usb_hid.devices)
 pins = [board.GP2, board.GP3, board.GP4, board.GP5, board.GP6, board.GP7, board.GP8, board.GP9, board.GP10, board.GP11, board.GP12, board.GP13]
 buttons = []
 
+# initialize neopixel leds
+leds = neopixel.NeoPixel(board.GP28, 4, brightness=0.5, auto_write=False)
+
 # variable for the currently active layer
 activeLayer = 0
 previousLayer = 0
@@ -116,16 +135,19 @@ for pin in pins:
 last_states = [False] * len(buttons)
 
 
-# function sending the pressed key event for the given key touple
+# function sending the pressed key event for the given key touple defined in the keymap
 # @param key: a touple of the structure (KeyType.KEY, (Keycode[, Keycode, ...]))
 #                       or       (KeyType.MEDIA, ConsumerControlCode)
 #                       or       (KeyType.LAYER, (Layer.SWITCH | Layer.PEEK, layer index : int))
+#                       or       (KeyType.LIGHTING, [Lighting Action])
 #                       or       (KeyType.NONE, [...])
 def PressKey(key):
     # reference global variables
     global activeLayer
     global previousLayer
+    global leds
 
+    # check for standard key actions
     if (key[0] == KeyType.KEY):
         try:
             keyboard.press(*key[1])
@@ -133,13 +155,36 @@ def PressKey(key):
             # more than 6 keys were pressed
             # this is forbidden by the library
             pass
+    # check for media key actions
     elif (key[0] == KeyType.MEDIA):
         consumer_control.press(key[1])
+    # check for layer actions
     elif (key[0] == KeyType.LAYER):
         # switch to the layer
         previousLayer = activeLayer
         activeLayer = key[1][1]
+    # check for lighting actions
+    elif (key[0] == KeyType.LIGHTING):
+        # check for lighting off action
+        if(key[1] == Lighting.TOGGLE):
+            if (leds.brightness == 0):
+                leds.brightness = 0.5
+            else:
+                leds.brightness = 0
+        elif(key[1] == Lighting.INCREASE_BRIGHTNESS):
+            # increase led brightness if possible
+            newBrightness = leds.brightness + 0.1
+            if (newBrightness > 1.0):
+                newBrightness = 1.0
+            leds.brightness = newBrightness
+        elif(key[1] == Lighting.DECREASE_BRIGHTNESS):
+            # decrease led brightness if possible
+            newBrightness = leds.brightness - 0.1
+            if (newBrightness < 0):
+                newBrightness = 0.0
+            leds.brightness = newBrightness
     print("Pressed:  " + str(key[1]))
+
 
 # function sending the released key event for the given key touple
 # @param key: a touple of the structure (KeyType.KEY, (Keycode[, Keycode, ...]))
@@ -181,11 +226,28 @@ def CheckKeys():
         # update the last state
         last_states[i] = buttons[i].value
 
+# function defining the lighting of each layer
+def UpdateLEDs():
+    if(activeLayer == 0):
+        leds[0] = (255, 20, 32)
+        leds[1] = (125, 255, 32)
+        leds[2] = (50, 32, 255)
+        leds[3] = (255, 10, 255)
+
+    else:
+        leds[0] = (200, 20, 180)
+        leds[1] = (40, 110, 195)
+        leds[2] = (20, 120, 200)
+        leds[3] = (220, 20, 160)
+    leds.show()
+
 # endless main loop
 while True:
     # set the internal led on when default layer is active
     led.value = (activeLayer == 0)
     # check for key presses
     CheckKeys()
+    # set the neopixels
+    UpdateLEDs()
     # sleep for debouncing
     time.sleep(0.005)
