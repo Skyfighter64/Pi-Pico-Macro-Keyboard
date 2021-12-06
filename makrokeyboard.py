@@ -92,7 +92,7 @@ keymap = [
     [
         (KeyType.LIGHTING, Lighting.INCREASE_BRIGHTNESS), # adjust lighting brightness
         (KeyType.LIGHTING, Lighting.DECREASE_BRIGHTNESS),
-        (KeyType.LIGHTING, Lighting.OFF),
+        (KeyType.LIGHTING, Lighting.TOGGLE),
         (KeyType.KEY, (Keycode.F16,)),  # more extra F keys for custom program hotkeys
         (KeyType.KEY, (Keycode.F17,)),
         (KeyType.KEY, (Keycode.F18,)),
